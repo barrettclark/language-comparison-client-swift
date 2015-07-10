@@ -16,20 +16,15 @@ class ViewController: UIViewController {
         let client = Client()
         client.getRequest { (response, data, error) -> Void in
             if (data != nil) {
-                client.parse(data!, completionHandler: { (json, error) -> Void in
-                    NSLog("Untyped JSON: \(json!)")
+                client.parseToJSONDictionary(data!, completionHandler: { (json, error) -> Void in
+                    NSLog("Untyped response: \(json!)")
+                })
+                client.parse(data!, completionHandler: { (payload) -> Void in
+                    NSLog("Typed response: \(payload!)")
                 })
             } else {
                 NSLog("Error: \(error!)")
             }
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
-
