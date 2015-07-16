@@ -41,7 +41,7 @@ class Client {
     }
     
     func parse(data: NSData, completionHandler: (Payload?) -> Void) {
-        parseToJSONDictionary(data) { (json, error) -> Void in
+        parseToJSONDictionary(data) { json, error in
             if (json != nil) {
                 let payload = Payload(fromJSONDictionary: json!)
                 completionHandler(payload)
@@ -59,10 +59,10 @@ struct Payload {
     let timestamp: NSDate
     
     init(fromJSONDictionary json: JSONDictionary) {
-        self.name = json["name"] as! String
-        self.theBestNumber = json["best_number"] as! Int
-        self.pi = json["pi"] as! Double
-        self.timestamp = dateFormatter().dateFromString(json["right_now"] as! String)!
+        self.init(name: json["name"] as! String,
+            theBestNumber: json["best_number"] as! Int,
+            pi: json["pi"] as! Double,
+            timestamp: dateFormatter().dateFromString(json["right_now"] as! String)!)
     }
     init(name: String, theBestNumber: Int, pi: Double, timestamp: NSDate) {
         self.name = name

@@ -42,7 +42,7 @@ class Client {
     }
     
     func parse(data: NSData, completionHandler: (Payload?) -> Void) {
-        parseToJSONDictionary(data) { (json, error) -> Void in
+        parseToJSONDictionary(data) { json, error in
             if (json != nil) {
                 let payload = Payload(fromJSONDictionary: json!)
                 completionHandler(payload)
@@ -60,10 +60,10 @@ struct Payload {
     let timestamp: NSDate
     
     init(fromJSONDictionary json: JSONDictionary) {
-        self.name = json["name"] as! String
-        self.theBestNumber = json["best_number"] as! Int
-        self.pi = json["pi"] as! Double
-        self.timestamp = dateFormatter().dateFromString(json["right_now"] as! String)!
+        self.init(name: json["name"] as! String,
+         theBestNumber: json["best_number"] as! Int,
+                    pi: json["pi"] as! Double,
+             timestamp: dateFormatter().dateFromString(json["right_now"] as! String)!)
     }
     init(name: String, theBestNumber: Int, pi: Double, timestamp: NSDate) {
         self.name = name
@@ -74,7 +74,7 @@ struct Payload {
 }
 
 func currentTimeMillis() -> Int64{
-    var nowDouble = NSDate().timeIntervalSince1970
+    let nowDouble = NSDate().timeIntervalSince1970
     return Int64(nowDouble*1000)
 }
 
@@ -83,10 +83,7 @@ for i in 0..<100 {
     let client = Client()
     client.getRequest { (response, data, error) -> Void in
         if (data != nil) {
-            // client.parseToJSONDictionary(data!, completionHandler: { (json, error) -> Void in
-            //     print("Untyped response: \(json!)")
-            // })
-            client.parse(data!, completionHandler: { (payload) -> Void in
+            client.parse(data!, completionHandler: { payload in
                 print("Typed response: \(payload!)")
             })
         } else {
